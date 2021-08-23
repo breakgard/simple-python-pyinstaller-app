@@ -9,18 +9,24 @@ trigger:
 pool: Default
 
 steps:
-- script: docker run -v $(pwd)/sources:/sources -w / python:2-alpine python -m py_compile sources/add2vals.py sources/calc.py
+- script: |
+    docker run -u $(id -u) -v $(pwd)/sources:/sources -w / python:2-alpine python -m py_compile sources/add2vals.py sources/calc.py
+    mkdir artifacts
+    mv sources/*.pyc artifacts/
   displayName: 'Compile'
 
-- publish: sources/*.pyc
+- publish: artifacts
+  artifactName: artifacts
   displayName: 'Publish artifacts'
 
-- script: docker run -v $(pwd)/sources:/sources -w / python:2-alpine py.test --junit-xml sources/test-results.xml sources/test_calc.py
+- script: | 
+    docker run -u $(id -u) -v $(pwd)/sources:/sources -w / python:2-alpine py.test --junit-xml sources/test-results.xml sources/test_calc.py
+    mv sources/test-results.xml .
   displayName: 'Test'
 
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: 'sources/test-results.xml'
+    testResultsFiles: 'test-results.xml'
   displayName: 'Publish test results'
 
