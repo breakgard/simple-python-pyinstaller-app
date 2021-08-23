@@ -8,16 +8,16 @@ trigger:
 
 pool: Default
 
-container: python:2-alpine
+#container: python:2-alpine
 
 steps:
-- script: python -m py_compile sources/add2vals.py sources/calc.py
+- script: docker run python:2-alpine python -m py_compile sources/add2vals.py sources/calc.py
   displayName: 'Compile'
 
 - publish: $(System.DefaultWorkingDirectory)/sources/*.py*
   displayName: 'Publish artifacts'
 
-- script: py.test --junit-xml test-reports/results.xml sources/test_calc.py
+- script: docker run python:2-alpine py.test --junit-xml test-reports/results.xml sources/test_calc.py
   displayName: 'Test'
 
 - task: PublishTestResults@2
