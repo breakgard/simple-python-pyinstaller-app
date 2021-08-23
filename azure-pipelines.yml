@@ -20,7 +20,7 @@ steps:
   displayName: 'Publish artifacts'
 
 - script: | 
-    docker run -u $(id -u) -v $(pwd)/sources:/sources -w / python:2-alpine py.test --junit-xml sources/test-results.xml sources/test_calc.py
+    docker run -u $(id -u) -v $(pwd)/sources:/sources -w / qnib/pytest py.test --junit-xml sources/test-results.xml sources/test_calc.py
     mv sources/test-results.xml .
   displayName: 'Test'
 
