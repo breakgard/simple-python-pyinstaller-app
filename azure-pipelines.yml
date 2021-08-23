@@ -16,7 +16,7 @@ steps:
   displayName: 'Compile'
 
 - publish: artifacts
-  artifactName: artifacts
+  artifact: artifacts
   displayName: 'Publish artifacts'
 
 - script: | 
